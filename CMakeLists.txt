@@ -17,7 +17,6 @@ find_package(GTK3)
 find_package(Qt5Core COMPONENTS Private)
 find_package(Qt5Gui COMPONENTS Private)
 find_package(Qt5ThemeSupport COMPONENTS Private)
-find_package(Qt5ServiceSupport COMPONENTS Private)
 
 add_compile_definitions(GDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_6)
 

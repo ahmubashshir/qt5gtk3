@@ -20,7 +20,6 @@ set(PTLIBS
     Qt::GuiPrivate
     Qt5::ThemeSupport
     Qt5::ThemeSupportPrivate
-    Qt5::ServiceSupportPrivate
 )
 
 if(ENABLE_DBUS)

@@ -14,9 +14,9 @@
 #include <qfileinfo.h>
 
 #include <private/qguiapplication_p.h>
-#include <private/qgenericunixservices_p.h>
 #include <qpa/qplatformintegration.h>
 #include <qpa/qplatformfontdatabase.h>
+#include <qpa/qplatformnativeinterface.h>
 
 #undef signals
 #include <gtk/gtk.h>
@@ -62,6 +62,7 @@ class QGtk3Dialog
 		GtkWidget *gtkWidget;
 		QPlatformDialogHelper *helper;
 		Qt::WindowModality modality;
+		static QString getWLSurfaceId(QWindow *const parent);
 };
 
 QGtk3Dialog::QGtk3Dialog(GtkWidget *gtkWidget, QPlatformDialogHelper *helper)
@@ -109,14 +110,10 @@ bool QGtk3Dialog::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWind
 		if (false) {
 #if defined(GDK_WINDOWING_WAYLAND) && GTK_CHECK_VERSION(3, 22, 0)
 		} else if (GDK_IS_WAYLAND_WINDOW(gdkWindow)) {
-			const auto unixServices = dynamic_cast<QGenericUnixServices *>(
-			                              QGuiApplicationPrivate::platformIntegration()->services());
-			if (unixServices) {
-				const auto handle = unixServices->portalWindowIdentifier(parent);
-				if (handle.startsWith(QLatin1String("wayland:"))) {
-					auto handleBa = QStringRef(&handle, 0, 8).toUtf8();
-					gdk_wayland_window_set_transient_for_exported(gdkWindow, handleBa.data());
-				}
+			const auto handle = getWLSurfaceId(parent);
+			if (handle.startsWith(QLatin1String("wayland:"))) {
+				auto handleBa = QStringRef(&handle, 0, 8).toUtf8();
+				gdk_wayland_window_set_transient_for_exported(gdkWindow, handleBa.data());
 			}
 #endif
 #if defined(ENABLE_XLIB) && defined(GDK_WINDOWING_X11)
@@ -138,6 +135,22 @@ bool QGtk3Dialog::show(Qt::WindowFlags flags, Qt::WindowModality modality, QWind
 	return true;
 }
 
+QString QGtk3Dialog::getWLSurfaceId(QWindow *const parent)
+{
+	if (parent) {
+#if defined(GDK_WINDOWING_WAYLAND) && GTK_CHECK_VERSION(3, 22, 0)
+		QPlatformNativeInterface *native = QGuiApplication::platformNativeInterface();
+		if (native) {
+			struct wl_proxy *id = static_cast<struct wl_proxy *>(
+			                          native->nativeResourceForWindow("surface", parent));
+			if (id) {
+				return "wayland:" + QString(wl_proxy_get_id(id));
+			}
+		}
+#endif
+	}
+	return QString();
+}
 void QGtk3Dialog::hide()
 {
 	gtk_widget_hide(gtkWidget);
