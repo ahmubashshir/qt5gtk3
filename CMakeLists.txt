@@ -22,6 +22,7 @@ find_package(GTK3 REQUIRED)
 find_package(Qt5Core CONFIG COMPONENTS Private REQUIRED)
 find_package(Qt5Gui COMPONENTS Private REQUIRED)
 find_package(Qt5ThemeSupport COMPONENTS Private REQUIRED)
+find_package(QtPluginDirs)
 
 add_compile_definitions(GDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_6)
 
@@ -34,13 +35,4 @@ if(ENABLE_DBUS)
     find_package(Qt5DBus REQUIRED)
 endif()
 
-get_target_property(REAL_QMAKE_EXECUTABLE ${Qt5Core_QMAKE_EXECUTABLE} IMPORTED_LOCATION)
-execute_process(COMMAND "${REAL_QMAKE_EXECUTABLE}" -query QT_INSTALL_PLUGINS
-            OUTPUT_VARIABLE QT_PLUGINS_DIR
-            ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-if(NOT QT_PLUGINS_DIR)
-	message(FATAL_ERROR "Couldn't determine QT_PLUGINS_DIR.")
-else()
-	message(STATUS "Found QT_PLUGINS_DIR: ${QT_PLUGINS_DIR}")
-endif()
 add_subdirectory(platformtheme)

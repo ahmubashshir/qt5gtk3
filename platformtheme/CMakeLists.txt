@@ -19,8 +19,8 @@ set(PTLIBS
     Qt::CorePrivate
     Qt::Gui
     Qt::GuiPrivate
-    Qt5::ThemeSupport
-    Qt5::ThemeSupportPrivate
+    Qt::ThemeSupport
+    Qt::ThemeSupportPrivate
 )
 
 if(ENABLE_DBUS)
@@ -34,5 +34,5 @@ endif()
 
 add_library(qt5gtk3 MODULE ${PTSRCS})
 
-target_link_libraries(qt5gtk3 ${PTLIBS})
+target_link_libraries(qt5gtk3 PRIVATE ${PTLIBS})
 install(TARGETS qt5gtk3 DESTINATION ${QT_PLUGINS_DIR}/platformthemes)
