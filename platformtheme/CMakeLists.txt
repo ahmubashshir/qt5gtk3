@@ -33,4 +33,6 @@ if(ENABLE_X11)
 endif()
 
 add_library(qt5gtk3 MODULE ${PTSRCS})
+
 target_link_libraries(qt5gtk3 ${PTLIBS})
+install(TARGETS qt5gtk3 DESTINATION ${QT_PLUGINS_DIR}/platformthemes)

@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 namespace Qt5Gtk3 {
 	Q_NAMESPACE
 
-	enum ColorScheme {
+	enum class ColorScheme {
 		Dark,
 		Light,
 		Unknown
