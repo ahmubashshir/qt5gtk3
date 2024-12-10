@@ -18,6 +18,7 @@
 #include <QLoggingCategory>
 
 QT_BEGIN_NAMESPACE
+Q_LOGGING_CATEGORY(lcQt5Gtk3Json, "qt.qpa.qt5gtk3.json");
 
 QLatin1String Qt5Gtk3Json::fromPalette(QPlatformTheme::Palette palette)
 {

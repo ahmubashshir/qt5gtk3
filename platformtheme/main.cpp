@@ -6,6 +6,7 @@
 #include "qgtk3theme.h"
 
 QT_BEGIN_NAMESPACE
+Q_LOGGING_CATEGORY(lcQt5Gtk3ThemePlugin, "qt.qpa.qt5gtk3.plugin");
 
 class Qt5Gtk3ThemePlugin : public QPlatformThemePlugin
 {

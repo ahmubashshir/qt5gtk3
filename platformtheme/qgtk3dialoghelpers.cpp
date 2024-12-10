@@ -38,8 +38,10 @@
 // be preserved.
 #define PREVIEW_WIDTH 256
 #define PREVIEW_HEIGHT 512
+#include <QLoggingCategory>
 
 QT_BEGIN_NAMESPACE
+Q_LOGGING_CATEGORY(lcQt5Gtk3Dialog, "qt.qpa.qt5gtk3.dialog");
 
 //using namespace Qt::StringLiterals;
 

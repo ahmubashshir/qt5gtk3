@@ -15,9 +15,10 @@
 #ifdef ENABLE_X11
 #include <X11/Xlib.h>
 #endif
+#include <QLoggingCategory>
 
 QT_BEGIN_NAMESPACE
-
+Q_LOGGING_CATEGORY(lcQt5Gtk3Theme, "qt.qpa.qt5gtk3.theme");
 //using namespace Qt::StringLiterals;
 
 const char *Qt5Gtk3Theme::name = "qt5gtk3";

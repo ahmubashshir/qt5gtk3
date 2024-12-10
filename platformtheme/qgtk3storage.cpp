@@ -18,6 +18,7 @@
 #include <qpa/qwindowsysteminterface.h>
 
 QT_BEGIN_NAMESPACE
+Q_LOGGING_CATEGORY(lcQt5Gtk3Storage, "qt.qpa.qt5gtk3.storage");
 
 Qt5Gtk3Storage::Qt5Gtk3Storage()
 {

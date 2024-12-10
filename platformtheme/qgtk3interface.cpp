@@ -22,7 +22,7 @@
 #include <QLoggingCategory>
 
 QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(lcQt5Gtk3Interface, "qt.qpa.qt5gtk3.storage");
+Q_LOGGING_CATEGORY(lcQt5Gtk3Interface, "qt.qpa.qt5gtk3.interface");
 
 
 // Callback for gnome event loop has to be static
