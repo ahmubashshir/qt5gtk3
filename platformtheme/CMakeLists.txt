@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 set(PTSRCS
     main.cpp
+    qgtk3colorscheme_p.h
     qgtk3dialoghelpers.cpp qgtk3dialoghelpers.h
 
     qgtk3theme.cpp qgtk3theme.h

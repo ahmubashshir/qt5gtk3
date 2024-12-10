@@ -7,7 +7,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QGtk3ThemePlugin : public QPlatformThemePlugin
+class Qt5Gtk3ThemePlugin : public QPlatformThemePlugin
 {
 		Q_OBJECT
 		Q_PLUGIN_METADATA(IID QPlatformThemeFactoryInterface_iid FILE "gtk3.json")
@@ -16,11 +16,11 @@ class QGtk3ThemePlugin : public QPlatformThemePlugin
 		QPlatformTheme *create(const QString &key, const QStringList &params) override;
 };
 
-QPlatformTheme *QGtk3ThemePlugin::create(const QString &key, const QStringList &params)
+QPlatformTheme *Qt5Gtk3ThemePlugin::create(const QString &key, const QStringList &params)
 {
 	Q_UNUSED(params);
-	if (!key.compare(QLatin1String(QGtk3Theme::name), Qt::CaseInsensitive))
-		return new QGtk3Theme;
+	if (!key.compare(QLatin1String(Qt5Gtk3Theme::name), Qt::CaseInsensitive))
+		return new Qt5Gtk3Theme;
 
 	return nullptr;
 }

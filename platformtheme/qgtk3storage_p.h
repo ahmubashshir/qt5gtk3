@@ -32,11 +32,11 @@
 #define QFlatMap QMap
 
 QT_BEGIN_NAMESPACE
-class QGtk3Storage
+class Qt5Gtk3Storage
 {
     Q_GADGET
 public:
-    QGtk3Storage();
+    Qt5Gtk3Storage();
 
     // Enum documented in cpp file. Please keep it in line with updates made here.
     enum class SourceType {
@@ -50,8 +50,8 @@ public:
 
     // Standard GTK source: Populate a brush from GTK
     struct Gtk3Source  {
-        QGtk3Interface::QGtkWidget gtkWidgetType;
-        QGtk3Interface::QGtkColorSource source;
+        Qt5Gtk3Interface::QGtkWidget gtkWidgetType;
+        Qt5Gtk3Interface::QGtkColorSource source;
         GtkStateFlags state;
         int width = -1;
         int height = -1;
@@ -67,7 +67,7 @@ public:
     struct RecursiveSource  {
         QPalette::ColorGroup colorGroup;
         QPalette::ColorRole colorRole;
-        QGtk3::ColorScheme colorScheme;
+        Qt5Gtk3::ColorScheme colorScheme;
         int lighter = 100;
         int deltaRed = 0;
         int deltaGreen = 0;
@@ -122,7 +122,7 @@ public:
         MixSources mix;
 
         // GTK constructor
-        Source(QGtk3Interface::QGtkWidget wtype, QGtk3Interface::QGtkColorSource csource,
+        Source(Qt5Gtk3Interface::QGtkWidget wtype, Qt5Gtk3Interface::QGtkColorSource csource,
                GtkStateFlags cstate, int bwidth = -1, int bheight = -1) : sourceType(SourceType::Gtk)
         {
              gtk3.gtkWidgetType = wtype;
@@ -134,7 +134,7 @@ public:
 
         // Recursive constructor for darker/lighter colors
         Source(QPalette::ColorGroup group, QPalette::ColorRole role,
-               QGtk3::ColorScheme scheme, int p_lighter = 100)
+               Qt5Gtk3::ColorScheme scheme, int p_lighter = 100)
                : sourceType(SourceType::Modified)
         {
             rec.colorGroup = group;
@@ -145,7 +145,7 @@ public:
 
         // Recursive constructor for color modification
         Source(QPalette::ColorGroup group, QPalette::ColorRole role,
-               QGtk3::ColorScheme scheme, int p_red, int p_green, int p_blue)
+               Qt5Gtk3::ColorScheme scheme, int p_red, int p_green, int p_blue)
                : sourceType(SourceType::Modified)
         {
             rec.colorGroup = group;
@@ -158,7 +158,7 @@ public:
 
         // Recursive constructor for all: color modification and darker/lighter
         Source(QPalette::ColorGroup group, QPalette::ColorRole role,
-               QGtk3::ColorScheme scheme, int p_lighter,
+               Qt5Gtk3::ColorScheme scheme, int p_lighter,
                int p_red, int p_green, int p_blue) : sourceType(SourceType::Modified)
         {
             rec.colorGroup = group;
@@ -193,7 +193,7 @@ public:
         // Debug
         QDebug operator<<(QDebug dbg)
         {
-            return dbg << "QGtk3Storage::Source(sourceType=" << sourceType << ")";
+            return dbg << "Qt5Gtk3Storage::Source(sourceType=" << sourceType << ")";
         }
     };
 
@@ -201,15 +201,15 @@ public:
     struct TargetBrush {
         QPalette::ColorGroup colorGroup;
         QPalette::ColorRole colorRole;
-        QGtk3::ColorScheme colorScheme;
+        Qt5Gtk3::ColorScheme colorScheme;
 
         // Generic constructor
         TargetBrush(QPalette::ColorGroup group, QPalette::ColorRole role,
-                    QGtk3::ColorScheme scheme = QGtk3::ColorScheme::Unknown) :
+                    Qt5Gtk3::ColorScheme scheme = Qt5Gtk3::ColorScheme::Unknown) :
                     colorGroup(group), colorRole(role), colorScheme(scheme) {};
 
         // Copy constructor with color scheme modifier for dark/light aware search
-        TargetBrush(const TargetBrush &other, QGtk3::ColorScheme scheme) :
+        TargetBrush(const TargetBrush &other, Qt5Gtk3::ColorScheme scheme) :
             colorGroup(other.colorGroup), colorRole(other.colorRole), colorScheme(scheme) {};
 
         // struct becomes key of a map, so operator< is needed
@@ -228,7 +228,7 @@ public:
     // Public getters
     const QPalette *palette(QPlatformTheme::Palette = QPlatformTheme::SystemPalette) const;
     QPixmap standardPixmap(QPlatformTheme::StandardPixmap standardPixmap, const QSizeF &size) const;
-    QGtk3::ColorScheme colorScheme() const { return m_colorScheme; };
+    Qt5Gtk3::ColorScheme colorScheme() const { return m_colorScheme; };
     static QPalette standardPalette();
     const QString themeName() const { return m_interface ? m_interface->themeName() : QString(); };
     const QFont *font(QPlatformTheme::Font type) const;
@@ -242,12 +242,12 @@ private:
     // Storage for palettes and their brushes
     PaletteMap m_palettes;
 
-    std::unique_ptr<QGtk3Interface> m_interface;
+    std::unique_ptr<Qt5Gtk3Interface> m_interface;
 #ifdef QT_DBUS_LIB
-    std::unique_ptr<QGtk3PortalInterface> m_portalInterface;
+    std::unique_ptr<Qt5Gtk3PortalInterface> m_portalInterface;
 #endif
 
-    QGtk3::ColorScheme m_colorScheme = QGtk3::ColorScheme::Unknown;
+    Qt5Gtk3::ColorScheme m_colorScheme = Qt5Gtk3::ColorScheme::Unknown;
 
     // Caches for Pixmaps, fonts and palettes
     mutable QCache<QPlatformTheme::StandardPixmap, QImage> m_pixmapCache;

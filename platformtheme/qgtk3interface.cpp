@@ -22,19 +22,19 @@
 #include <QLoggingCategory>
 
 QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(lcQGtk3Interface, "qt.qpa.qt5gtk3.storage");
+Q_LOGGING_CATEGORY(lcQt5Gtk3Interface, "qt.qpa.qt5gtk3.storage");
 
 
 // Callback for gnome event loop has to be static
-static QGtk3Storage *m_storage = nullptr;
+static Qt5Gtk3Storage *m_storage = nullptr;
 
-QGtk3Interface::QGtk3Interface(QGtk3Storage *s)
+Qt5Gtk3Interface::Qt5Gtk3Interface(Qt5Gtk3Storage *s)
 {
 	initColorMap();
 
 	if (!s) {
-		qCDebug(lcQGtk3Interface) << "QGtk3Interface instantiated without QGtk3Storage."
-		                          << "No reaction to runtime theme changes.";
+		qCDebug(lcQt5Gtk3Interface) << "Qt5Gtk3Interface instantiated without Qt5Gtk3Storage."
+		                            << "No reaction to runtime theme changes.";
 		return;
 	}
 
@@ -48,14 +48,14 @@ QGtk3Interface::QGtk3Interface(QGtk3Storage *s)
 	const gboolean success = g_signal_connect(settings, "notify::gtk-theme-name",
 	                         G_CALLBACK(handleThemeChange), nullptr);
 	if (success == FALSE) {
-		qCDebug(lcQGtk3Interface) << "Connection to theme change signal failed."
-		                          << "No reaction to runtime theme changes.";
+		qCDebug(lcQt5Gtk3Interface) << "Connection to theme change signal failed."
+		                            << "No reaction to runtime theme changes.";
 	} else {
 		m_storage = s;
 	}
 }
 
-QGtk3Interface::~QGtk3Interface()
+Qt5Gtk3Interface::~Qt5Gtk3Interface()
 {
 	// Ignore theme changes when destructor is reached
 	m_storage = nullptr;
@@ -73,7 +73,7 @@ QGtk3Interface::~QGtk3Interface()
     Returns an integer corresponding to GtkStateFlags.
     Returns -1 if \param state does not correspond to a valid enum key.
  */
-int QGtk3Interface::toGtkState(const QString &state)
+int Qt5Gtk3Interface::toGtkState(const QString &state)
 {
 #define CASE(x) \
     if (QLatin1String(QByteArray(state.toLatin1())) == QLatin1String(#x)) \
@@ -104,7 +104,7 @@ int QGtk3Interface::toGtkState(const QString &state)
     \internal
     \brief Returns \param state converted into a string.
  */
-const QLatin1String QGtk3Interface::fromGtkState(GtkStateFlags state)
+const QLatin1String Qt5Gtk3Interface::fromGtkState(GtkStateFlags state)
 {
 #define CASE(x) case GTK_STATE_FLAG_ ##x: return QLatin1String(#x)
 	switch (state) {
@@ -119,7 +119,7 @@ const QLatin1String QGtk3Interface::fromGtkState(GtkStateFlags state)
     \internal
     \brief Populates the internal map used to find a GTK color's source and fallback generic color.
  */
-void QGtk3Interface::initColorMap()
+void Qt5Gtk3Interface::initColorMap()
 {
 #define SAVE(src, state, prop, def)\
     {ColorKey({QGtkColorSource::src, GTK_STATE_FLAG_ ##state}), ColorValue({QLatin1String(#prop), QGtkColorDefault::def})}
@@ -144,7 +144,7 @@ void QGtk3Interface::initColorMap()
 	};
 #undef SAVE
 
-	qCDebug(lcQGtk3Interface) << "Color map populated from defaults.";
+	qCDebug(lcQt5Gtk3Interface) << "Color map populated from defaults.";
 }
 
 /*!
@@ -158,7 +158,7 @@ void QGtk3Interface::initColorMap()
     been mentioned explicitly.
     That way they can be covered more easily in case additional icons are provided by GTK.
  */
-QImage QGtk3Interface::standardPixmap(QPlatformTheme::StandardPixmap standardPixmap) const
+QImage Qt5Gtk3Interface::standardPixmap(QPlatformTheme::StandardPixmap standardPixmap) const
 {
 	switch (standardPixmap) {
 	case QPlatformTheme::DialogDiscardButton:
@@ -266,7 +266,7 @@ QImage QGtk3Interface::standardPixmap(QPlatformTheme::StandardPixmap standardPix
     \internal
     \brief Returns a QImage for a given GTK \param iconName.
  */
-QImage QGtk3Interface::qt_gtk_get_icon(const char* iconName) const
+QImage Qt5Gtk3Interface::qt_gtk_get_icon(const char* iconName) const
 {
 	GError *error = NULL;
 	GtkIconTheme *theme = gtk_icon_theme_get_default();
@@ -296,7 +296,7 @@ QImage QGtk3Interface::qt_gtk_get_icon(const char* iconName) const
     \li GDK pixel buffer has 4 channels (assumed at runtime)
     \endlist
  */
-QImage QGtk3Interface::qt_convert_gdk_pixbuf(GdkPixbuf *buf) const
+QImage Qt5Gtk3Interface::qt_convert_gdk_pixbuf(GdkPixbuf *buf) const
 {
 	if (!buf)
 		return QImage();
@@ -324,7 +324,7 @@ QImage QGtk3Interface::qt_convert_gdk_pixbuf(GdkPixbuf *buf) const
     Returns a pointer to a new GTK widget of \param type, allocated on the heap.
     Returns nullptr of gtk_Default has is passed.
  */
-GtkWidget *QGtk3Interface::qt_new_gtkWidget(QGtkWidget type) const
+GtkWidget *Qt5Gtk3Interface::qt_new_gtkWidget(QGtkWidget type) const
 {
 #define CASE(Type)\
     case QGtkWidget::Type: return Type ##_new();
@@ -369,7 +369,7 @@ GtkWidget *QGtk3Interface::qt_new_gtkWidget(QGtkWidget type) const
     The requested color is defined by \param def and the GTK color-state \param state.
     The return type is GDK color in RGBA format.
  */
-GdkRGBA QGtk3Interface::genericColor(GtkStyleContext *con, GtkStateFlags state, QGtkColorDefault def) const
+GdkRGBA Qt5Gtk3Interface::genericColor(GtkStyleContext *con, GtkStateFlags state, QGtkColorDefault def) const
 {
 	GdkRGBA color;
 
@@ -397,7 +397,7 @@ GdkRGBA QGtk3Interface::genericColor(GtkStyleContext *con, GtkStateFlags state, 
     \note If no corresponding property can be found for \param source, the method falls back to a
     suitable generic color.
  */
-QColor QGtk3Interface::color(GtkWidget *widget, QGtkColorSource source, GtkStateFlags state) const
+QColor Qt5Gtk3Interface::color(GtkWidget *widget, QGtkColorSource source, GtkStateFlags state) const
 {
 	GdkRGBA col;
 	GtkStyleContext *con = context(widget);
@@ -409,12 +409,12 @@ QColor QGtk3Interface::color(GtkWidget *widget, QGtkColorSource source, GtkState
             const ColorValue val = gtkColorMap.value(key);\
             if (!gtk_style_context_lookup_color(con, val.propertyName.toUtf8().constData(), &col)) {\
                 col = genericColor(con, state, val.genericSource);\
-                qCDebug(lcQGtk3Interface) << "Property name" << val.propertyName << "not found.\n"\
+                qCDebug(lcQt5Gtk3Interface) << "Property name" << val.propertyName << "not found.\n"\
                                           << "Falling back to " << val.genericSource;\
             }\
          } else {\
            col = genericColor(con, state, QGtkColorDefault::def);\
-           qCDebug(lcQGtk3Interface) << "No color source found for" << QGtkColorSource::src\
+           qCDebug(lcQt5Gtk3Interface) << "No color source found for" << QGtkColorSource::src\
                                      << fromGtkState(state) << "\n Falling back to"\
                                      << QGtkColorDefault::def;\
          }\
@@ -442,7 +442,7 @@ QColor QGtk3Interface::color(GtkWidget *widget, QGtkColorSource source, GtkState
     \note
     The method returns nullptr for the enum value gtk_Default.
  */
-GtkWidget *QGtk3Interface::widget(QGtkWidget type) const
+GtkWidget *Qt5Gtk3Interface::widget(QGtkWidget type) const
 {
 	if (type == QGtkWidget::gtk_Default)
 		return nullptr;
@@ -465,7 +465,7 @@ GtkWidget *QGtk3Interface::widget(QGtkWidget type) const
 
     \note If \param w is nullptr, the GTK default style context (entry style) is returned.
  */
-GtkStyleContext *QGtk3Interface::context(GtkWidget *w) const
+GtkStyleContext *Qt5Gtk3Interface::context(GtkWidget *w) const
 {
 	if (w)
 		return gtk_widget_get_style_context(w);
@@ -484,7 +484,7 @@ GtkStyleContext *QGtk3Interface::context(GtkWidget *w) const
     or to a pixmap based style.
 
  */
-QBrush QGtk3Interface::brush(QGtkWidget wtype, QGtkColorSource source, GtkStateFlags state) const
+QBrush Qt5Gtk3Interface::brush(QGtkWidget wtype, QGtkColorSource source, GtkStateFlags state) const
 {
 	// FIXME: When a color's pixmap can be accessed via the GTK API,
 	// read it and set it in the brush.
@@ -495,7 +495,7 @@ QBrush QGtk3Interface::brush(QGtkWidget wtype, QGtkColorSource source, GtkStateF
     \internal
     \brief Returns the name of the current GTK theme.
  */
-QString QGtk3Interface::themeName() const
+QString Qt5Gtk3Interface::themeName() const
 {
 	QString name;
 
@@ -518,7 +518,7 @@ QString QGtk3Interface::themeName() const
 
     \note Returns Unknown in the unlikely case that both colors have the same lightness.
  */
-QGtk3::ColorScheme QGtk3Interface::colorSchemeByColors() const
+Qt5Gtk3::ColorScheme Qt5Gtk3Interface::colorSchemeByColors() const
 {
 	const QColor background = color(widget(QGtkWidget::gtk_Default),
 	                                QGtkColorSource::Background,
@@ -528,10 +528,10 @@ QGtk3::ColorScheme QGtk3Interface::colorSchemeByColors() const
 	                                GTK_STATE_FLAG_ACTIVE);
 
 	if (foreground.lightness() > background.lightness())
-		return QGtk3::ColorScheme::Dark;
+		return Qt5Gtk3::ColorScheme::Dark;
 	if (foreground.lightness() < background.lightness())
-		return QGtk3::ColorScheme::Light;
-	return QGtk3::ColorScheme::Unknown;
+		return Qt5Gtk3::ColorScheme::Light;
+	return Qt5Gtk3::ColorScheme::Unknown;
 }
 
 /*!
@@ -540,7 +540,7 @@ QGtk3::ColorScheme QGtk3Interface::colorSchemeByColors() const
 
     Returns the GTK widget type corresponding to the given QPlatformTheme::Font \param type.
  */
-inline constexpr QGtk3Interface::QGtkWidget QGtk3Interface::toWidgetType(QPlatformTheme::Font type)
+inline constexpr Qt5Gtk3Interface::QGtkWidget Qt5Gtk3Interface::toWidgetType(QPlatformTheme::Font type)
 {
 	switch (type) {
 	case QPlatformTheme::SystemFont:
@@ -607,7 +607,7 @@ inline constexpr QGtk3Interface::QGtkWidget QGtk3Interface::toWidgetType(QPlatfo
     \internal
     \brief Convert pango \param style to QFont::Style.
  */
-inline constexpr QFont::Style QGtk3Interface::toFontStyle(PangoStyle style)
+inline constexpr QFont::Style Qt5Gtk3Interface::toFontStyle(PangoStyle style)
 {
 	switch (style) {
 	case PANGO_STYLE_ITALIC:
@@ -628,7 +628,7 @@ inline constexpr QFont::Style QGtk3Interface::toFontStyle(PangoStyle style)
     Compatibility of PangoWeight is statically asserted.
     The minimum (1) and maximum (1000) weight in Qt is respeced.
  */
-inline constexpr int QGtk3Interface::toFontWeight(PangoWeight weight)
+inline constexpr int Qt5Gtk3Interface::toFontWeight(PangoWeight weight)
 {
 	// GTK PangoWeight can be directly converted to QFont::Weight
 	// unless one of the enums changes.
@@ -660,7 +660,7 @@ inline constexpr int QGtk3Interface::toFontWeight(PangoWeight weight)
     If a fixed font is requested, the method fixes the pitch and falls back to monospace,
     unless a suitable fixed pitch font is found.
  */
-QFont QGtk3Interface::font(QPlatformTheme::Font type) const
+QFont Qt5Gtk3Interface::font(QPlatformTheme::Font type) const
 {
 	GtkStyleContext *con = context(widget(toWidgetType(type)));
 	if (!con)
@@ -709,9 +709,9 @@ QFont QGtk3Interface::font(QPlatformTheme::Font type) const
 	if (type == QPlatformTheme::FixedFont) {
 		font.setFixedPitch(true);
 		if (!QFontInfo(font).fixedPitch()) {
-			qCDebug(lcQGtk3Interface) << "No fixed pitch font found in font family"
-			                          << font.family() << ". falling back to a default"
-			                          << "fixed pitch font";
+			qCDebug(lcQt5Gtk3Interface) << "No fixed pitch font found in font family"
+			                            << font.family() << ". falling back to a default"
+			                            << "fixed pitch font";
 			font.setFamily(QLatin1String("monospace"));
 			font.setFamily(QLatin1String("monospace"));
 		}
@@ -725,7 +725,7 @@ QFont QGtk3Interface::font(QPlatformTheme::Font type) const
     \internal
     \brief Returns a GTK styled file icon for \param fileInfo.
  */
-QIcon QGtk3Interface::fileIcon(const QFileInfo &fileInfo) const
+QIcon Qt5Gtk3Interface::fileIcon(const QFileInfo &fileInfo) const
 {
 	GFile *file = g_file_new_for_path(fileInfo.absoluteFilePath().toLatin1().constData());
 	if (!file)

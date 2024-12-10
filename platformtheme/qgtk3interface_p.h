@@ -35,15 +35,15 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_DECLARE_LOGGING_CATEGORY(lcQGtk3Interface);
+Q_DECLARE_LOGGING_CATEGORY(lcQt5Gtk3Interface);
 
 //using namespace Qt::StringLiterals;
 
-class QGtk3Storage;
+class Qt5Gtk3Storage;
 
 /*!
     \internal
-    \brief The QGtk3Interface class centralizes communication with the GTK3 library.
+    \brief The Qt5Gtk3Interface class centralizes communication with the GTK3 library.
 
     By encapsulating all GTK version specific syntax and conversions, it makes Qt's GTK theme
     independent from GTK versions.
@@ -52,16 +52,16 @@ class QGtk3Storage;
     Including GTK3 headers requires #undef signals, which disables Qt signal/slot handling.
  */
 
-class QGtk3Interface
+class Qt5Gtk3Interface
 {
     Q_GADGET
 public:
-    QGtk3Interface(QGtk3Storage *);
-    ~QGtk3Interface();
+    Qt5Gtk3Interface(Qt5Gtk3Storage *);
+    ~Qt5Gtk3Interface();
 
     /*!
      *  \internal
-        \enum QGtk3Interface::QGtkWidget
+        \enum Qt5Gtk3Interface::QGtkWidget
         \brief Represents GTK widget types used to obtain color information.
 
         \note The enum value gtk_Default refers to the GTK default style, rather than to a specific widget.
@@ -92,7 +92,7 @@ public:
 
     /*!
         \internal
-        \enum QGtk3Interface::QGtkColorSource
+        \enum Qt5Gtk3Interface::QGtkColorSource
         \brief The QGtkColorSource enum represents the source of a color within a GTK widgets style context.
 
         If the current GTK theme provides such a color for a given widget, the color can be read
@@ -110,7 +110,7 @@ public:
 
     /*!
         \internal
-        \enum QGtk3Interface::QGtkColorDefault
+        \enum Qt5Gtk3Interface::QGtkColorDefault
         \brief The QGtkColorDefault enum represents generic GTK colors.
 
         The GTK3 methods gtk_style_context_get_color, gtk_style_context_get_background_color, and
@@ -139,7 +139,7 @@ public:
     QString themeName() const;
 
     // Derive color scheme from default colors
-    QGtk3::ColorScheme colorSchemeByColors() const;
+    Qt5Gtk3::ColorScheme colorSchemeByColors() const;
 
     // Convert GTK state to/from string
     static int toGtkState(const QString &state);
@@ -160,7 +160,7 @@ private:
 
         QDebug operator<<(QDebug dbg)
         {
-            return dbg << "QGtk3Interface::ColorKey(colorSource=" << colorSource << ", GTK state=" << fromGtkState(state) << ")";
+            return dbg << "Qt5Gtk3Interface::ColorKey(colorSource=" << colorSource << ", GTK state=" << fromGtkState(state) << ")";
         }
     };
 
@@ -170,7 +170,7 @@ private:
 
         QDebug operator<<(QDebug dbg)
         {
-            return dbg << "QGtk3Interface::ColorValue(propertyName=" << propertyName << ", genericSource=" << genericSource << ")";
+            return dbg << "Qt5Gtk3Interface::ColorValue(propertyName=" << propertyName << ", genericSource=" << genericSource << ")";
         }
     };
 

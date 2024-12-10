@@ -4,10 +4,10 @@
 #include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
-namespace QGtk3 {
+namespace Qt5Gtk3 {
 	Q_NAMESPACE
 
-	enum class ColorScheme {
+	enum ColorScheme {
 		Dark,
 		Light,
 		Unknown

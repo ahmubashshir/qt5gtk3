@@ -27,7 +27,7 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(lcQGtk3PortalInterface, "qt.qpa.qt5gtk3.portal");
+Q_LOGGING_CATEGORY(lcQt5Gtk3PortalInterface, "qt.qpa.qt5gtk3.portal");
 
 //using namespace Qt::StringLiterals;
 
@@ -52,7 +52,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QMap<QString, QVa
 	return argument;
 }
 
-QGtk3PortalInterface::QGtk3PortalInterface(QGtk3Storage *s)
+Qt5Gtk3PortalInterface::Qt5Gtk3PortalInterface(Qt5Gtk3Storage *s)
 	: m_storage(s)
 {
 	qRegisterMetaType<QDBusVariant>();
@@ -61,17 +61,17 @@ QGtk3PortalInterface::QGtk3PortalInterface(QGtk3Storage *s)
 	queryColorScheme();
 
 	if (!s) {
-		qCDebug(lcQGtk3PortalInterface) << "QGtk3PortalInterface instantiated without QGtk3Storage."
-		                                << "No reaction to runtime theme changes.";
+		qCDebug(lcQt5Gtk3PortalInterface) << "Qt5Gtk3PortalInterface instantiated without Qt5Gtk3Storage."
+		                                  << "No reaction to runtime theme changes.";
 	}
 }
 
-QGtk3::ColorScheme QGtk3PortalInterface::colorScheme() const
+Qt5Gtk3::ColorScheme Qt5Gtk3PortalInterface::colorScheme() const
 {
 	return m_colorScheme;
 }
 
-void QGtk3PortalInterface::queryColorScheme()
+void Qt5Gtk3PortalInterface::queryColorScheme()
 {
 	QDBusConnection connection = QDBusConnection::sessionBus();
 	QDBusMessage message = QDBusMessage::createMethodCall(
@@ -94,8 +94,8 @@ void QGtk3PortalInterface::queryColorScheme()
 				               QDBusVariant(settings.value(appearanceInterface).value(colorSchemeKey)));
 			}
 		} else {
-			qCDebug(lcQGtk3PortalInterface) << "Failed to query org.freedesktop.portal.Settings: "
-			                                << reply.error().message();
+			qCDebug(lcQt5Gtk3PortalInterface) << "Failed to query org.freedesktop.portal.Settings: "
+			                                  << reply.error().message();
 		}
 		watcher->deleteLater();
 	});
@@ -108,14 +108,14 @@ void QGtk3PortalInterface::queryColorScheme()
 	    SLOT(settingChanged(QString, QString, QDBusVariant)));
 }
 
-void QGtk3PortalInterface::settingChanged(const QString &group, const QString &key,
+void Qt5Gtk3PortalInterface::settingChanged(const QString &group, const QString &key,
         const QDBusVariant &value)
 {
 	if (group == appearanceInterface && key == colorSchemeKey) {
 		const uint colorScheme = value.variant().toUInt();
 		// From org.freedesktop.portal.Settings.xml
 		// "1" - Prefer dark appearance
-		QGtk3::ColorScheme newColorScheme = colorScheme == 1 ? QGtk3::ColorScheme::Dark : QGtk3::ColorScheme::Light;
+		Qt5Gtk3::ColorScheme newColorScheme = colorScheme == 1 ? Qt5Gtk3::ColorScheme::Dark : Qt5Gtk3::ColorScheme::Light;
 		if (m_colorScheme != newColorScheme) {
 			m_colorScheme = newColorScheme;
 			if (m_storage)

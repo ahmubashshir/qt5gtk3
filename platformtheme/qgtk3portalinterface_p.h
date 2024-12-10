@@ -22,18 +22,18 @@
 QT_BEGIN_NAMESPACE
 
 class QDBusVariant;
-class QGtk3Storage;
+class Qt5Gtk3Storage;
 
-Q_DECLARE_LOGGING_CATEGORY(lcQGtk3PortalInterface);
+Q_DECLARE_LOGGING_CATEGORY(lcQt5Gtk3PortalInterface);
 
-class QGtk3PortalInterface : public QObject
+class Qt5Gtk3PortalInterface : public QObject
 {
     Q_OBJECT
 public:
-    QGtk3PortalInterface(QGtk3Storage *s);
-    ~QGtk3PortalInterface() = default;
+    Qt5Gtk3PortalInterface(Qt5Gtk3Storage *s);
+    ~Qt5Gtk3PortalInterface() = default;
 
-    QGtk3::ColorScheme colorScheme() const;
+    Qt5Gtk3::ColorScheme colorScheme() const;
 
 private Q_SLOTS:
     void settingChanged(const QString &group, const QString &key,
@@ -41,8 +41,8 @@ private Q_SLOTS:
 private:
     void queryColorScheme();
 
-    QGtk3::ColorScheme m_colorScheme = QGtk3::ColorScheme::Unknown;
-    QGtk3Storage *m_storage = nullptr;
+    Qt5Gtk3::ColorScheme m_colorScheme = Qt5Gtk3::ColorScheme::Unknown;
+    Qt5Gtk3Storage *m_storage = nullptr;
 };
 
 QT_END_NAMESPACE

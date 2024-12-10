@@ -19,18 +19,18 @@
 
 QT_BEGIN_NAMESPACE
 
-QGtk3Storage::QGtk3Storage()
+Qt5Gtk3Storage::Qt5Gtk3Storage()
 {
-	m_interface.reset(new QGtk3Interface(this));
+	m_interface.reset(new Qt5Gtk3Interface(this));
 #ifdef QT_DBUS_LIB
-	m_portalInterface.reset(new QGtk3PortalInterface(this));
+	m_portalInterface.reset(new Qt5Gtk3PortalInterface(this));
 #endif
 	populateMap();
 }
 
 /*!
     \internal
-    \enum QGtk3Storage::SourceType
+    \enum Qt5Gtk3Storage::SourceType
     \brief This enum represents the type of a color source.
 
     \value Gtk Color is read from a GTK widget
@@ -48,7 +48,7 @@ QGtk3Storage::QGtk3Storage()
 
     A null QBrush is returned, if no brush corresponding to the source has been found.
  */
-QBrush QGtk3Storage::brush(const Source &source, const BrushMap &map) const
+QBrush Qt5Gtk3Storage::brush(const Source &source, const BrushMap &map) const
 {
 	switch (source.sourceType) {
 	case SourceType::Gtk:
@@ -119,7 +119,7 @@ QBrush QGtk3Storage::brush(const Source &source, const BrushMap &map) const
     Takes dark/light/unknown into consideration.
     Returns an empty brush if no suitable one can be found.
  */
-QGtk3Storage::Source QGtk3Storage::brush(const TargetBrush &b, const BrushMap &map) const
+Qt5Gtk3Storage::Source Qt5Gtk3Storage::brush(const TargetBrush &b, const BrushMap &map) const
 {
 #define FIND(brush) if (map.contains(brush))\
                         return map.value(brush)
@@ -128,9 +128,9 @@ QGtk3Storage::Source QGtk3Storage::brush(const TargetBrush &b, const BrushMap &m
 	FIND(b);
 
 	// unknown color scheme can find anything
-	if (b.colorScheme == QGtk3::ColorScheme::Unknown) {
-		FIND(TargetBrush(b, QGtk3::ColorScheme::Dark));
-		FIND(TargetBrush(b, QGtk3::ColorScheme::Light));
+	if (b.colorScheme == Qt5Gtk3::ColorScheme::Unknown) {
+		FIND(TargetBrush(b, Qt5Gtk3::ColorScheme::Dark));
+		FIND(TargetBrush(b, Qt5Gtk3::ColorScheme::Light));
 	}
 
 	// Color group All can always be found
@@ -152,7 +152,7 @@ QGtk3Storage::Source QGtk3Storage::brush(const TargetBrush &b, const BrushMap &m
     \note This palette will be used as a default baseline for the system palette, which then
     will be used as a default baseline for any other palette type.
  */
-QPalette QGtk3Storage::standardPalette()
+QPalette Qt5Gtk3Storage::standardPalette()
 {
 	QColor backgroundColor(0xd4, 0xd0, 0xc8);
 	QColor lightColor(backgroundColor.lighter());
@@ -175,14 +175,14 @@ QPalette QGtk3Storage::standardPalette()
     Returns the pointer to a (cached) QPalette for \param type, with its brushes
     populated according to the current GTK theme.
  */
-const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
+const QPalette *Qt5Gtk3Storage::palette(QPlatformTheme::Palette type) const
 {
 	if (type >= QPlatformTheme::NPalettes)
 		return nullptr;
 
 	if (m_paletteCache[type].has_value()) {
-		qCDebug(lcQGtk3Interface) << "Returning palette from cache:"
-		                          << QGtk3Json::fromPalette(type);
+		qCDebug(lcQt5Gtk3Interface) << "Returning palette from cache:"
+		                            << Qt5Gtk3Json::fromPalette(type);
 
 		return &m_paletteCache[type].value();
 	}
@@ -193,8 +193,8 @@ const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
 
 	// Fall back to system palette for unknown types
 	if (!m_palettes.contains(type) &&  type != QPlatformTheme::SystemPalette) {
-		qCDebug(lcQGtk3Interface) << "Returning system palette for unknown type"
-		                          << QGtk3Json::fromPalette(type);
+		qCDebug(lcQt5Gtk3Interface) << "Returning system palette for unknown type"
+		                            << Qt5Gtk3Json::fromPalette(type);
 		return palette();
 	}
 
@@ -204,7 +204,7 @@ const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
 	QPalette p = QPalette( type == QPlatformTheme::SystemPalette ? standardPalette()
 	                       : m_paletteCache[QPlatformTheme::SystemPalette].value());
 
-	qCDebug(lcQGtk3Interface) << "Creating palette:" << QGtk3Json::fromPalette(type);
+	qCDebug(lcQt5Gtk3Interface) << "Creating palette:" << Qt5Gtk3Json::fromPalette(type);
 	for (auto i = brushes.begin(); i != brushes.end(); ++i) {
 		Source source = i.value();
 
@@ -214,8 +214,8 @@ const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
 		const auto appSource = i.key().colorScheme;
 		const auto appTheme = colorScheme();
 		const bool setBrush = (appSource == appTheme) ||
-		                      (appSource == QGtk3::ColorScheme::Unknown) ||
-		                      (appTheme == QGtk3::ColorScheme::Unknown);
+		                      (appSource == Qt5Gtk3::ColorScheme::Unknown) ||
+		                      (appTheme == Qt5Gtk3::ColorScheme::Unknown);
 
 		if (setBrush) {
 			p.setBrush(i.key().colorGroup, i.key().colorRole, brush(source, brushes));
@@ -224,7 +224,7 @@ const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
 
 	m_paletteCache[type].emplace(p);
 	if (type == QPlatformTheme::SystemPalette)
-		qCDebug(lcQGtk3Interface) << "System Palette defined" << themeName() << colorScheme() << p;
+		qCDebug(lcQt5Gtk3Interface) << "System Palette defined" << themeName() << colorScheme() << p;
 
 	return &m_paletteCache[type].value();
 }
@@ -235,7 +235,7 @@ const QPalette *QGtk3Storage::palette(QPlatformTheme::Palette type) const
 
     Returns a QFont of \param type, styled according to the current GTK theme.
 */
-const QFont *QGtk3Storage::font(QPlatformTheme::Font type) const
+const QFont *Qt5Gtk3Storage::font(QPlatformTheme::Font type) const
 {
 	if (m_fontCache[type].has_value())
 		return &m_fontCache[type].value();
@@ -251,8 +251,8 @@ const QFont *QGtk3Storage::font(QPlatformTheme::Font type) const
     Returns a pixmap specified by \param standardPixmap and \param size.
     Returns an empty pixmap if GTK doesn't support the requested one.
  */
-QPixmap QGtk3Storage::standardPixmap(QPlatformTheme::StandardPixmap standardPixmap,
-                                     const QSizeF &size) const
+QPixmap Qt5Gtk3Storage::standardPixmap(QPlatformTheme::StandardPixmap standardPixmap,
+                                       const QSizeF &size) const
 {
 	if (m_pixmapCache.contains(standardPixmap))
 		return QPixmap::fromImage(m_pixmapCache.object(standardPixmap)->scaled(size.toSize()));
@@ -272,7 +272,7 @@ QPixmap QGtk3Storage::standardPixmap(QPlatformTheme::StandardPixmap standardPixm
     \internal
     \brief Returns a GTK styled file icon corresponding to \param fileInfo.
  */
-QIcon QGtk3Storage::fileIcon(const QFileInfo &fileInfo) const
+QIcon Qt5Gtk3Storage::fileIcon(const QFileInfo &fileInfo) const
 {
 	return m_interface ? m_interface->fileIcon(fileInfo) : QIcon();
 }
@@ -281,9 +281,9 @@ QIcon QGtk3Storage::fileIcon(const QFileInfo &fileInfo) const
     \internal
     \brief Clears all caches.
  */
-void QGtk3Storage::clear()
+void Qt5Gtk3Storage::clear()
 {
-	m_colorScheme = QGtk3::ColorScheme::Unknown;
+	m_colorScheme = Qt5Gtk3::ColorScheme::Unknown;
 	m_palettes.clear();
 	for (auto &cache : m_paletteCache)
 		cache.reset();
@@ -299,7 +299,7 @@ void QGtk3Storage::clear()
     Clear all caches, re-populate with current GTK theme and notify the window system interface.
     This method is a callback for the theme change signal sent from GTK.
  */
-void QGtk3Storage::handleThemeChange()
+void Qt5Gtk3Storage::handleThemeChange()
 {
 	populateMap();
 	QWindowSystemInterface::handleThemeChange(NULL);
@@ -313,7 +313,7 @@ void QGtk3Storage::handleThemeChange()
     within GTK. The structure can hold mapping information for each QPlatformTheme::Palette
     enum value. If no specific mapping is stored for an enum value, the system palette is returned
     instead of a specific one. If no mapping is stored for the system palette, it will fall back to
-    QGtk3Storage::standardPalette.
+    Qt5Gtk3Storage::standardPalette.
 
     The method will populate the data structure with a standard mapping, covering the following
     palette types:
@@ -331,10 +331,10 @@ void QGtk3Storage::handleThemeChange()
     valid path with write access, it will write the standard mapping into a Json file.
     That Json file can be modified and/or extended.
     The Json syntax is
-    - "QGtk3Palettes" (top level value)
+    - "Qt5Gtk3Palettes" (top level value)
         - QPlatformTheme::Palette
             - QPalette::ColorRole
-                - QGtk3::ColorScheme
+                - Qt5Gtk3::ColorScheme
                 - Qt::ColorGroup
                 - Source data
                     - Source Type
@@ -353,12 +353,12 @@ void QGtk3Storage::handleThemeChange()
     If a Json file contains only fixed brushes (e.g. exported with {{QT_GUI_GTK_JSON_HARDCODED=true}}),
     no colors will be imported from GTK.
  */
-void QGtk3Storage::populateMap()
+void Qt5Gtk3Storage::populateMap()
 {
 	static QString m_themeName;
 
 	// Distiguish initialization, theme change or call without theme change
-	QGtk3::ColorScheme newColorScheme = QGtk3::ColorScheme::Unknown;
+	Qt5Gtk3::ColorScheme newColorScheme = Qt5Gtk3::ColorScheme::Unknown;
 	const QString newThemeName = themeName();
 
 #ifdef QT_DBUS_LIB
@@ -367,10 +367,10 @@ void QGtk3Storage::populateMap()
 	newColorScheme = m_portalInterface->colorScheme();
 #endif
 
-	if (newColorScheme == QGtk3::ColorScheme::Unknown) {
+	if (newColorScheme == Qt5Gtk3::ColorScheme::Unknown) {
 		// Derive color scheme from theme name
 		newColorScheme = newThemeName.contains(QLatin1String("dark"), Qt::CaseInsensitive)
-		                 ? QGtk3::ColorScheme::Dark : m_interface->colorSchemeByColors();
+		                 ? Qt5Gtk3::ColorScheme::Dark : m_interface->colorSchemeByColors();
 	}
 
 	if (m_themeName == newThemeName && m_colorScheme == newColorScheme)
@@ -379,9 +379,9 @@ void QGtk3Storage::populateMap()
 	clear();
 
 	if (m_themeName.isEmpty()) {
-		qCDebug(lcQGtk3Interface) << "GTK theme initialized:" << newThemeName << newColorScheme;
+		qCDebug(lcQt5Gtk3Interface) << "GTK theme initialized:" << newThemeName << newColorScheme;
 	} else {
-		qCDebug(lcQGtk3Interface) << "GTK theme changed to:" << newThemeName << newColorScheme;
+		qCDebug(lcQt5Gtk3Interface) << "GTK theme changed to:" << newThemeName << newColorScheme;
 	}
 	m_colorScheme = newColorScheme;
 	m_themeName = newThemeName;
@@ -412,7 +412,7 @@ void QGtk3Storage::populateMap()
     If it contains the keyword \c true, it returns a palette map with all brush
     sources converted to fixed sources.
  */
-const QGtk3Storage::PaletteMap QGtk3Storage::savePalettes() const
+const Qt5Gtk3Storage::PaletteMap Qt5Gtk3Storage::savePalettes() const
 {
 	const QString hard = qEnvironmentVariable("QT_GUI_GTK_JSON_HARDCODED");
 	if (!hard.contains(QLatin1String("true"), Qt::CaseInsensitive))
@@ -424,10 +424,10 @@ const QGtk3Storage::PaletteMap QGtk3Storage::savePalettes() const
 	PaletteMap map = m_palettes;
 	for (auto paletteIterator = map.begin(); paletteIterator != map.end();
 	     ++paletteIterator) {
-		QGtk3Storage::BrushMap &bm = paletteIterator.value();
+		Qt5Gtk3Storage::BrushMap &bm = paletteIterator.value();
 		for (auto brushIterator = bm.begin(); brushIterator != bm.end();
 		     ++brushIterator) {
-			QGtk3Storage::Source &s = brushIterator.value();
+			Qt5Gtk3Storage::Source &s = brushIterator.value();
 			switch (s.sourceType) {
 
 			// Read the brush and convert it into a fixed brush
@@ -456,9 +456,9 @@ const QGtk3Storage::PaletteMap QGtk3Storage::savePalettes() const
     taking {{QT_GUI_GTK_JSON_HARDCODED}} into consideration.
     Returns \c true if saving was successful and \c false otherwise.
  */
-bool QGtk3Storage::save(const QString &filename, QJsonDocument::JsonFormat f) const
+bool Qt5Gtk3Storage::save(const QString &filename, QJsonDocument::JsonFormat f) const
 {
-	return QGtk3Json::save(savePalettes(), filename, f);
+	return Qt5Gtk3Json::save(savePalettes(), filename, f);
 }
 
 /*!
@@ -469,9 +469,9 @@ bool QGtk3Storage::save(const QString &filename, QJsonDocument::JsonFormat f) co
     taking {{QT_GUI_GTK_JSON_HARDCODED}} into consideration.
     Returns \c true if saving was successful and \c false otherwise.
  */
-QJsonDocument QGtk3Storage::save() const
+QJsonDocument Qt5Gtk3Storage::save() const
 {
-	return QGtk3Json::save(savePalettes());
+	return Qt5Gtk3Json::save(savePalettes());
 }
 
 /*!
@@ -480,9 +480,9 @@ QJsonDocument QGtk3Storage::save() const
 
     Returns \c true if the file was successfully parsed and \c false otherwise.
  */
-bool QGtk3Storage::load(const QString &filename)
+bool Qt5Gtk3Storage::load(const QString &filename)
 {
-	return QGtk3Json::load(m_palettes, filename);
+	return Qt5Gtk3Json::load(m_palettes, filename);
 }
 
 /*!
@@ -492,7 +492,7 @@ bool QGtk3Storage::load(const QString &filename)
     The method creates a hard coded standard mapping, used if no external Json file
     containing a valid mapping has been specified in the environment variable {{QT_GUI_GTK_JSON}}.
  */
-void QGtk3Storage::createMapping()
+void Qt5Gtk3Storage::createMapping()
 {
 	// Hard code standard mapping
 	BrushMap map;
@@ -500,25 +500,25 @@ void QGtk3Storage::createMapping()
 
 	// Define a GTK source
 #define GTK(wtype, colorSource, state)\
-    source = Source(QGtk3Interface::QGtkWidget::gtk_ ##wtype,\
-                    QGtk3Interface::QGtkColorSource::colorSource, GTK_STATE_FLAG_ ##state)
+    source = Source(Qt5Gtk3Interface::QGtkWidget::gtk_ ##wtype,\
+                    Qt5Gtk3Interface::QGtkColorSource::colorSource, GTK_STATE_FLAG_ ##state)
 
 	// Define a modified source
 #define LIGHTER(group, role, lighter)\
     source = Source(QPalette::group, QPalette::role,\
-                    QGtk3::ColorScheme::Unknown, lighter)
+                    Qt5Gtk3::ColorScheme::Unknown, lighter)
 #define MODIFY(group, role, red, green, blue)\
     source = Source(QPalette::group, QPalette::role,\
-                    QGtk3::ColorScheme::Unknown, red, green, blue)
+                    Qt5Gtk3::ColorScheme::Unknown, red, green, blue)
 
 	// Define fixed source
 #define FIX(color) source = FixedSource(color);
 
 	// Add the source to a target brush
-	// Use default QGtk3::ColorScheme::Unknown, if no color scheme was specified
+	// Use default Qt5Gtk3::ColorScheme::Unknown, if no color scheme was specified
 #define ADD_2(group, role) map.insert(TargetBrush(QPalette::group, QPalette::role), source);
 #define ADD_3(group, role, app) map.insert(TargetBrush(QPalette::group, QPalette::role,\
-    QGtk3::ColorScheme::app), source);
+    Qt5Gtk3::ColorScheme::app), source);
 #define ADD_X(x, group, role, app, FUNC, ...) FUNC
 #define ADD(...) ADD_X(,##__VA_ARGS__, ADD_3(__VA_ARGS__), ADD_2(__VA_ARGS__))
 	// Save target brushes to a palette type

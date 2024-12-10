@@ -35,11 +35,11 @@
 
 QT_BEGIN_NAMESPACE
 
-class QGtk3Json
+class Qt5Gtk3Json
 {
     Q_GADGET
 private:
-    QGtk3Json(){};
+    Qt5Gtk3Json(){};
 
 public:
     // Convert enums to strings
@@ -48,10 +48,10 @@ public:
     static QLatin1String fromColor(const QColor &Color);
     static QLatin1String fromColorRole(QPalette::ColorRole role);
     static QLatin1String fromColorGroup(QPalette::ColorGroup group);
-    static QLatin1String fromGdkSource(QGtk3Interface::QGtkColorSource source);
-    static QLatin1String fromSourceType(QGtk3Storage::SourceType sourceType);
-    static QLatin1String fromWidgetType(QGtk3Interface::QGtkWidget widgetType);
-    static QLatin1String fromColorScheme(QGtk3::ColorScheme colorScheme);
+    static QLatin1String fromGdkSource(Qt5Gtk3Interface::QGtkColorSource source);
+    static QLatin1String fromSourceType(Qt5Gtk3Storage::SourceType sourceType);
+    static QLatin1String fromWidgetType(Qt5Gtk3Interface::QGtkWidget widgetType);
+    static QLatin1String fromColorScheme(Qt5Gtk3::ColorScheme colorScheme);
 
     // Convert strings to enums
     static QPlatformTheme::Palette toPalette(const QString &palette);
@@ -59,10 +59,10 @@ public:
     static QColor toColor(const QString &Color);
     static QPalette::ColorRole toColorRole(const QString &role);
     static QPalette::ColorGroup toColorGroup(const QString &group);
-    static QGtk3Interface::QGtkColorSource toGdkSource(const QString &source);
-    static QGtk3Storage::SourceType toSourceType(const QString &sourceType);
-    static QGtk3Interface::QGtkWidget toWidgetType(const QString &widgetType);
-    static QGtk3::ColorScheme toColorScheme(const QString &colorScheme);
+    static Qt5Gtk3Interface::QGtkColorSource toGdkSource(const QString &source);
+    static Qt5Gtk3Storage::SourceType toSourceType(const QString &sourceType);
+    static Qt5Gtk3Interface::QGtkWidget toWidgetType(const QString &widgetType);
+    static Qt5Gtk3::ColorScheme toColorScheme(const QString &colorScheme);
 
     // Json keys
     static constexpr QLatin1String cePalettes  = QLatin1String("QtGtk3Palettes"); // View
@@ -86,17 +86,17 @@ public:
     static constexpr QLatin1String ceColorScheme  = QLatin1String("ColorScheme"); // View
 
     // Save to a file
-    static bool save(const QGtk3Storage::PaletteMap &map, const QString &fileName,
+    static bool save(const Qt5Gtk3Storage::PaletteMap &map, const QString &fileName,
               QJsonDocument::JsonFormat format = QJsonDocument::Indented);
 
     // Save to a Json document
-    static const QJsonDocument save(const QGtk3Storage::PaletteMap &map);
+    static const QJsonDocument save(const Qt5Gtk3Storage::PaletteMap &map);
 
     // Load from a file
-    static bool load(QGtk3Storage::PaletteMap &map, const QString &fileName);
+    static bool load(Qt5Gtk3Storage::PaletteMap &map, const QString &fileName);
 
     // Load from a Json document
-    static bool load(QGtk3Storage::PaletteMap &map, const QJsonDocument &doc);
+    static bool load(Qt5Gtk3Storage::PaletteMap &map, const QJsonDocument &doc);
 };
 
 QT_END_NAMESPACE

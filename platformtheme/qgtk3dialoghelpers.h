@@ -17,16 +17,16 @@ typedef struct _GtkFileFilter GtkFileFilter;
 
 QT_BEGIN_NAMESPACE
 
-class QGtk3Dialog;
+class Qt5Gtk3Dialog;
 class QColor;
 
-class QGtk3ColorDialogHelper : public QPlatformColorDialogHelper
+class Qt5Gtk3ColorDialogHelper : public QPlatformColorDialogHelper
 {
     Q_OBJECT
 
 public:
-    QGtk3ColorDialogHelper();
-    ~QGtk3ColorDialogHelper();
+    Qt5Gtk3ColorDialogHelper();
+    ~Qt5Gtk3ColorDialogHelper();
 
     bool show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent) override;
     void exec() override;
@@ -36,19 +36,19 @@ public:
     QColor currentColor() const override;
 
 private:
-    static void onColorChanged(QGtk3ColorDialogHelper *helper);
+    static void onColorChanged(Qt5Gtk3ColorDialogHelper *helper);
     void applyOptions();
 
-    QScopedPointer<QGtk3Dialog> d;
+    QScopedPointer<Qt5Gtk3Dialog> d;
 };
 
-class QGtk3FileDialogHelper : public QPlatformFileDialogHelper
+class Qt5Gtk3FileDialogHelper : public QPlatformFileDialogHelper
 {
     Q_OBJECT
 
 public:
-    QGtk3FileDialogHelper();
-    ~QGtk3FileDialogHelper();
+    Qt5Gtk3FileDialogHelper();
+    ~Qt5Gtk3FileDialogHelper();
 
     bool show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent) override;
     void exec() override;
@@ -64,10 +64,10 @@ public:
     QString selectedNameFilter() const override;
 
 private:
-    static void onSelectionChanged(GtkDialog *dialog, QGtk3FileDialogHelper *helper);
-    static void onCurrentFolderChanged(QGtk3FileDialogHelper *helper);
-    static void onFilterChanged(QGtk3FileDialogHelper *helper);
-    static void onUpdatePreview(GtkDialog *dialog, QGtk3FileDialogHelper *helper);
+    static void onSelectionChanged(GtkDialog *dialog, Qt5Gtk3FileDialogHelper *helper);
+    static void onCurrentFolderChanged(Qt5Gtk3FileDialogHelper *helper);
+    static void onFilterChanged(Qt5Gtk3FileDialogHelper *helper);
+    static void onUpdatePreview(GtkDialog *dialog, Qt5Gtk3FileDialogHelper *helper);
     void applyOptions();
     void setNameFilters(const QStringList &filters);
     void selectFileInternal(const QUrl &filename);
@@ -77,17 +77,17 @@ private:
     QList<QUrl> _selection;
     QHash<QString, GtkFileFilter*> _filters;
     QHash<GtkFileFilter*, QString> _filterNames;
-    QScopedPointer<QGtk3Dialog> d;
+    QScopedPointer<Qt5Gtk3Dialog> d;
     GtkWidget *previewWidget;
 };
 
-class QGtk3FontDialogHelper : public QPlatformFontDialogHelper
+class Qt5Gtk3FontDialogHelper : public QPlatformFontDialogHelper
 {
     Q_OBJECT
 
 public:
-    QGtk3FontDialogHelper();
-    ~QGtk3FontDialogHelper();
+    Qt5Gtk3FontDialogHelper();
+    ~Qt5Gtk3FontDialogHelper();
 
     bool show(Qt::WindowFlags flags, Qt::WindowModality modality, QWindow *parent) override;
     void exec() override;
@@ -97,10 +97,10 @@ public:
     QFont currentFont() const override;
 
 private:
-    static void onFontChanged(QGtk3FontDialogHelper *helper);
+    static void onFontChanged(Qt5Gtk3FontDialogHelper *helper);
     void applyOptions();
 
-    QScopedPointer<QGtk3Dialog> d;
+    QScopedPointer<Qt5Gtk3Dialog> d;
 };
 
 QT_END_NAMESPACE

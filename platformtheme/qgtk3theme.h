@@ -11,15 +11,15 @@
 
 QT_BEGIN_NAMESPACE
 
-class QGtk3Theme : public QGnomeTheme
+class Qt5Gtk3Theme : public QGnomeTheme
 {
 public:
-    QGtk3Theme();
+    Qt5Gtk3Theme();
 
     virtual QVariant themeHint(ThemeHint hint) const override;
     virtual QString gtkFontName() const override;
 
-    QGtk3::ColorScheme colorScheme() const;
+    Qt5Gtk3::ColorScheme colorScheme() const;
 
     bool usePlatformNativeDialog(DialogType type) const override;
     QPlatformDialogHelper *createPlatformDialogHelper(DialogType type) const override;
@@ -33,7 +33,7 @@ public:
     static const char *name;
 private:
     static bool useNativeFileDialog();
-    std::unique_ptr<QGtk3Storage> m_storage;
+    std::unique_ptr<Qt5Gtk3Storage> m_storage;
 };
 
 QT_END_NAMESPACE

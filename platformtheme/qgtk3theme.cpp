@@ -20,7 +20,7 @@ QT_BEGIN_NAMESPACE
 
 //using namespace Qt::StringLiterals;
 
-const char *QGtk3Theme::name = "qt5gtk3";
+const char *Qt5Gtk3Theme::name = "qt5gtk3";
 
 template <typename T>
 static T gtkSetting(const gchar *propertyName)
@@ -54,7 +54,7 @@ void gtkMessageHandler(const gchar *log_domain,
 	}
 }
 
-QGtk3Theme::QGtk3Theme()
+Qt5Gtk3Theme::Qt5Gtk3Theme()
 {
 	// Ensure gtk uses the same windowing system, but let it
 	// fallback in case GDK_BACKEND environment variable
@@ -109,7 +109,7 @@ QGtk3Theme::QGtk3Theme()
 #endif
 #undef SETTING_CONNECT
 
-	m_storage.reset(new QGtk3Storage);
+	m_storage.reset(new Qt5Gtk3Storage);
 }
 
 static inline QVariant gtkGetLongPressTime()
@@ -121,7 +121,7 @@ static inline QVariant gtkGetLongPressTime()
 	return QVariant(gtkSetting<guint>(gtk_long_press_time));  // Since 3.14, apparently we support >= 3.6
 }
 
-QVariant QGtk3Theme::themeHint(QPlatformTheme::ThemeHint hint) const
+QVariant Qt5Gtk3Theme::themeHint(QPlatformTheme::ThemeHint hint) const
 {
 	switch (hint) {
 	case QPlatformTheme::CursorFlashTime:
@@ -159,7 +159,7 @@ QVariant QGtk3Theme::themeHint(QPlatformTheme::ThemeHint hint) const
 	}
 }
 
-QString QGtk3Theme::gtkFontName() const
+QString Qt5Gtk3Theme::gtkFontName() const
 {
 	QString cfgFontName = gtkSetting("gtk-font-name");
 	if (!cfgFontName.isEmpty())
@@ -167,13 +167,13 @@ QString QGtk3Theme::gtkFontName() const
 	return QGnomeTheme::gtkFontName();
 }
 
-QGtk3::ColorScheme QGtk3Theme::colorScheme() const
+Qt5Gtk3::ColorScheme Qt5Gtk3Theme::colorScheme() const
 {
 	Q_ASSERT(m_storage);
 	return m_storage->colorScheme();
 }
 
-bool QGtk3Theme::usePlatformNativeDialog(DialogType type) const
+bool Qt5Gtk3Theme::usePlatformNativeDialog(DialogType type) const
 {
 	switch (type) {
 	case ColorDialog:
@@ -187,23 +187,23 @@ bool QGtk3Theme::usePlatformNativeDialog(DialogType type) const
 	}
 }
 
-QPlatformDialogHelper *QGtk3Theme::createPlatformDialogHelper(DialogType type) const
+QPlatformDialogHelper *Qt5Gtk3Theme::createPlatformDialogHelper(DialogType type) const
 {
 	switch (type) {
 	case ColorDialog:
-		return new QGtk3ColorDialogHelper;
+		return new Qt5Gtk3ColorDialogHelper;
 	case FileDialog:
 		if (!useNativeFileDialog())
 			return nullptr;
-		return new QGtk3FileDialogHelper;
+		return new Qt5Gtk3FileDialogHelper;
 	case FontDialog:
-		return new QGtk3FontDialogHelper;
+		return new Qt5Gtk3FontDialogHelper;
 	default:
 		return nullptr;
 	}
 }
 
-bool QGtk3Theme::useNativeFileDialog()
+bool Qt5Gtk3Theme::useNativeFileDialog()
 {
 	/* Require GTK3 >= 3.15.5 to avoid running into this bug:
 	 * https://bugzilla.gnome.org/show_bug.cgi?id=725164
@@ -216,26 +216,26 @@ bool QGtk3Theme::useNativeFileDialog()
 	return gtk_check_version(3, 15, 5) == nullptr;
 }
 
-const QPalette *QGtk3Theme::palette(Palette type) const
+const QPalette *Qt5Gtk3Theme::palette(Palette type) const
 {
 	Q_ASSERT(m_storage);
 	return m_storage->palette(type);
 }
 
-QPixmap QGtk3Theme::standardPixmap(StandardPixmap sp, const QSizeF &size) const
+QPixmap Qt5Gtk3Theme::standardPixmap(StandardPixmap sp, const QSizeF &size) const
 {
 	Q_ASSERT(m_storage);
 	return m_storage->standardPixmap(sp, size);
 }
 
-const QFont *QGtk3Theme::font(Font type) const
+const QFont *Qt5Gtk3Theme::font(Font type) const
 {
 	Q_ASSERT(m_storage);
 	return m_storage->font(type);
 }
 
-QIcon QGtk3Theme::fileIcon(const QFileInfo &fileInfo,
-                           QPlatformTheme::IconOptions iconOptions) const
+QIcon Qt5Gtk3Theme::fileIcon(const QFileInfo &fileInfo,
+                             QPlatformTheme::IconOptions iconOptions) const
 {
 	Q_UNUSED(iconOptions);
 	Q_ASSERT(m_storage);
